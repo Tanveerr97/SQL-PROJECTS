@@ -1,3 +1,5 @@
+## Library Management System
+    # well-structured for managing a library system. It includes tables for Books, Members, Transactions, Staff, Book Categories, and Categories. You've also included sample data insertions and a variety of useful queries for managing the library, such as borrowing books, checking overdue books, and retrieving available books.
 -- SQLBook: Code
 -- Active: 1736099308663@@127.0.0.1@3306@project_1
 CREATE TABLE Books (
