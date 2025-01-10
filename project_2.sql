@@ -20,7 +20,8 @@ CREATE TABLE Marks (
     FOREIGN KEY (student_id) REFERENCES Students(student_id),
     FOREIGN KEY (subject_id) REFERENCES Subjects(subject_id)
 );
-
+INSERT INTO Students (first_name, last_name, dob, email) VALUES
+('John', 'Doe', '2000-05-15', 'john.doe@example.com'),
 ('Jane', 'Smith', '2001-07-22', 'jane.smith@example.com'),
 ('Alice', 'Johnson', '2002-02-28', 'alice.johnson@example.com'),
 ('Bob', 'Brown', '2000-11-10', 'bob.brown@example.com');
@@ -60,6 +61,4 @@ ORDER BY average_marks DESC;
 SELECT sub.subject_name, MAX(m.marks_obtained) AS highest_marks
 FROM Marks m
 JOIN Subjects sub ON m.subject_id = sub.subject_id
-GROUP BY sub.subject_name;
-
-SELECT * fr
+GROUP BY sub.subject_name
