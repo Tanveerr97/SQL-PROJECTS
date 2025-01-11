@@ -1,41 +1,21 @@
 import pandas as pd
-import pymysql as py
-excel_file = r"C:\Users\tanve\Desktop\Data set\shopping_trends.csv"
-data = pd.read_csv(excel_file)
-myobj = py.connect(host='localhost', user='root', passwd='12345', database='mm')
-mysqlc = myobj.cursor()
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-def sanitize_column_name(col_name):
-    return f"`{col_name.replace('`', '``')}`"
+# Read the Excel file
+df = pd.read_excel(r"C:\Users\tanve\Desktop\New Microsoft Excel Worksheet.xlsx", sheet_name="Sheet4")
 
-columns = data.columns
-types = []
+# Fill missing values with 0 for all columns
+df = df.fillna(0)
 
-for col in columns:
-    sanitized_col = sanitize_column_name(col)
-    dtype = data[col].dtype
-    if dtype == 'int64':
-        types.append(f"{sanitized_col} INT")
-    elif dtype == 'float64':
-        types.append(f"{sanitized_col} FLOAT")
-    elif dtype == 'object': 
-        types.append(f"{sanitized_col} VARCHAR(225)")  
-    else:
-        types.append(f"{sanitized_col} VARCHAR(225)")  
-columns_str = ", ".join([sanitize_column_name(col) for col in columns])
-types_str = ", ".join(types)
+# Select only numeric columns to avoid issues with non-numeric data
+numeric_df = df.select_dtypes(include=['number'])
 
-create_table_query = f"CREATE TABLE abc ({types_str});"
-try:
-    mysqlc.execute(create_table_query)
-    myobj.commit()
-    print("Table created successfully.")
-except Exception as e:
-    print("Error creating table:", e)
-insert_query = f"INSERT INTO abc ({', '.join([sanitize_column_name(col) for col in columns])}) VALUES ({', '.join(['%s' for _ in columns])})"
-data_tuples = [tuple(row) for row in data.values]
-mysqlc.executemany(insert_query, data_tuples)
-myobj.commit()  
-mysqlc.close()
-myobj.close()
+# Calculate the correlation matrix for numeric columns
+corr_matrix = numeric_df.corr()
 
+# Create a heatmap for the correlation matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
